@@ -94,12 +94,15 @@ def merge(run_folder: str):
 @stub.function(image=axolotl_image, timeout=60 * 30, volumes=VOLUME_CONFIG)
 def launch(config_raw: str, data_raw: str):
     from huggingface_hub import snapshot_download
+    # from transformers import AutoModelForCausalLM, AutoTokenizer
     import yaml
 
     # Ensure the base model is downloaded
     # TODO(gongy): test if this works with a path to previous fine-tune
     config = yaml.safe_load(config_raw)
     model_name = config["base_model"]
+    # tokenizer = AutoTokenizer.from_pretrained(model_name)
+    # model = AutoModelForCausalLM.from_pretrained("mistralai/Mixtral-8x7B-v0.1")
 
     try:
         snapshot_download(model_name, local_files_only=True)
@@ -135,7 +138,7 @@ def launch(config_raw: str, data_raw: str):
 
 
 @stub.local_entrypoint()
-def main(config: str = "config.yml", dataset: str = "my_data.jsonl"):
+def main(config: str = "config.yml", dataset: str = "mistral_ava_training.jsonl"):
     # Read config.yml and my_data.jsonl and pass them to the new function.
     dir = os.path.dirname(__file__)
     with open(f"{dir}/{config}", "r") as cfg, open(f"{dir}/{dataset}", "r") as data:

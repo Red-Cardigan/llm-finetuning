@@ -1,7 +1,7 @@
 from modal import Stub, Image, Volume, Secret
 import os
 
-APP_NAME = "example-axolotl"
+APP_NAME = "ava-axolotl"
 
 # Latest image hash of winglian/axolotl:main-py3.10-cu118-2.0.1 (2023-12-11)
 AXOLOTL_REGISTRY_SHA = (
@@ -29,7 +29,7 @@ vllm_image = (
     .pip_install("vllm==0.2.5")
 )
 
-stub = Stub(APP_NAME, secrets=[Secret.from_name("huggingface")])
+stub = Stub(APP_NAME, secrets=[Secret.from_name("huggingface"), Secret.from_name("my-wandb-secret")])
 
 # Volumes for pre-trained models and training runs.
 pretrained_volume = Volume.persisted("example-pretrained-vol")

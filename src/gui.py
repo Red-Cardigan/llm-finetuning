@@ -7,7 +7,7 @@ import os
 
 from .common import APP_NAME, VOLUME_CONFIG
 
-stub = modal.Stub("example-axolotl-gui")
+stub = modal.Stub("ava-axolotl-gui")
 stub.q = modal.Queue.new()  # Pass back the URL to auto-launch
 
 gradio_image = modal.Image.debian_slim().pip_install("gradio==4.5.0")
@@ -79,7 +79,7 @@ def gui(config_raw: str, data_raw: str):
             run_folder = f"/runs/{model.split('@')[0]}"
             with (
                 open(f"{run_folder}/config.yml", "r") as config,
-                open(f"{run_folder}/my_data.jsonl", "r") as data,
+                open(f"{run_folder}/mistral_ava_training.jsonl", "r") as data,
             ):
                 return config.read(), data.read()
         except (AttributeError, FileNotFoundError):
@@ -110,7 +110,7 @@ def gui(config_raw: str, data_raw: str):
                     )
                 with gr.Tab("Data (JSONL)"):
                     data_input = gr.Code(
-                        label="my_data.jsonl", lines=20, value=data_raw
+                        label="mistral_ava_training.jsonl", lines=20, value=data_raw
                     )
                 with gr.Column():
                     with gr.Group():
@@ -138,7 +138,7 @@ def gui(config_raw: str, data_raw: str):
                     with gr.Tab("Config (YAML)"):
                         model_config = gr.Code(label="config.yml", lines=20)
                     with gr.Tab("Data (JSONL)"):
-                        model_data = gr.Code(label="my_data.jsonl", lines=20)
+                        model_data = gr.Code(label="mistral_ava_training.jsonl", lines=20)
 
                 with gr.Column():
                     input_text = gr.Textbox(
@@ -177,7 +177,7 @@ def gui(config_raw: str, data_raw: str):
 def main():
     dir = os.path.dirname(__file__)
     with open(f"{dir}/config.yml", "r") as cfg, open(
-        f"{dir}/my_data.jsonl", "r"
+        f"{dir}/mistral_ava_training.jsonl", "r"
     ) as data:
         handle = gui.spawn(cfg.read(), data.read())
     url = stub.q.get()
